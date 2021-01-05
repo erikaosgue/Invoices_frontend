@@ -1,0 +1,143 @@
+<template>
+  <v-app>
+    <v-card-title class="mx-auto mt-3">
+        <h2 class="display-0.5" >INVOICES </h2>
+    </v-card-title>
+
+    <!-- table Section -->
+
+    <v-card width="800" class="mx-auto mt-3">
+        <v-data-table
+            :headers="headers"
+            :items="desserts"
+            :items-per-page="20"
+            class="elevation-1"
+            hide-default-footer
+        ></v-data-table>
+    </v-card>
+    
+    <!-- Button Create New Invoice -->
+    <v-card
+      width="130" 
+      class="mx-auto mt-10"
+      flat
+    >
+        <div class="d-flex flex-row-reverse">
+            <v-btn
+            class="ma-2"
+            outlined
+            color="indigo"
+            to="/CreateInvoice">New Invoice
+
+            </v-btn>
+        </div>
+    </v-card>
+
+  </v-app>
+</template>
+
+<script>
+
+import axios from 'axios';
+
+export default {
+  name: "MainHome",
+  
+  mounted: function(){
+    axios.get('http://localhost:8084/api/v1/invoices')
+      .then((response) => {
+        this.invoiceData = response.data
+        console.log(response.data)
+        for (var i=0; i < this.invoiceData.length; i++){
+          var data = this.invoiceData[i]
+          console.log("data", data)
+          var object = {
+              invoiceNumber: data.invoice_number,
+              client: data.client_name,
+              subtotal: data.subtotal,
+              discount: data.discount,
+              total: data.total,
+            }
+          this.desserts.push(object)
+        }
+    });
+  },
+
+  data () {
+
+    return {
+      invoiceData: null,
+
+        
+      headers: [
+        {
+            text: 'Invoice Number',
+            align: 'start',
+            sortable: false,
+            value: 'invoiceNumber',
+        },
+        { 
+            text: 'Client', 
+            value: 'client', 
+            sortable: false,
+        },
+        { 
+            text: 'Subtotal', 
+            value: 'subtotal', 
+            sortable: false,
+        },
+        { 
+            text: 'Discount', 
+            value: 'discount', 
+            sortable: false,
+        },
+        { 
+            text: 'Total', 
+            value: 'total',
+            sortable: false,
+        },
+      ],
+
+      desserts: [
+        {
+            invoiceNumber: 1234,
+            client: 'Ulter Technologies',
+            subtotal: 1000,
+            discount: '0%',
+            total: 1000,
+        },
+      ]
+    }
+  },
+
+  methods: {
+
+    GetInvoices() {
+      
+      axios.get('http://localhost:8084/invoices')
+      .then((response) => {
+        this.invoiceData = response.data
+        for (var i=0; i < this.invoiceData.length; i++){
+          var data = this.invoiceData[i]
+          console.log("data", data)
+          // var object = {
+          //     invoiceNumber: data.invoiceNumber,
+          //     client: 'Ulter Technologies',
+          //     subtotal: 1000,
+          //     discount: '0%',
+          //     total: 1000,
+          //     name: post.Name,
+          //     score: post.Puntaje,
+          //   }
+          // this.desserts.push(object)
+        }
+      });
+    }
+  },
+
+
+
+};
+</script>
+
+<style scoped></style>
