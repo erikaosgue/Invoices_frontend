@@ -14,7 +14,7 @@
             <v-data-table
                 :headers="headers"
                 :items="desserts"
-                :items-per-page="5"
+                :items-per-page="10"
                 class="elevation-1"
                 hide-default-footer
             ></v-data-table>
@@ -28,7 +28,7 @@
                 class="mt-5"
                 outlined
                 color="indigo"
-                to="/CreateInvoice">New Invoice
+                @click="$router.push('CreateItem')">Add Item
                 </v-btn>
             
         </v-card>
@@ -37,52 +37,79 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
+// import { mapGetters } from 'vuex';
+import axios from 'axios';
+
 export default {
   name: "DisplayItems",
+
+  mounted: function(){
+      var invoice_id = this.$store.state.invoice.id
+      console.log(invoice_id)
+      // axios.get('http://localhost:8084/api/v1/invoices/{id}/items')
+      axios.get('http://localhost:8084/api/v1/items')
+        .then((response) => {
+          this.clientsData = response.data
+          for (var i=0; i < this.clientsData.length; i++){
+              var data = this.clientsData[i] 
+              var object = {
+                  invoiceNumber: data.item_number, 
+                  client: data.name,
+                  subtotal: data.quantity
+                }
+            this.desserts.push(object)
+            console.log("desert", this.desserts)
+          }
+      })
+      .catch(error => {
+          console.log(error.response)
+      });
+    },
+  
+
+  methods: {
+    ...mapActions(['recieveItems']),
+  },
+  
+
   data () {
     return {
-        
+      id: '',
       headers: [
         {
-            text: 'Invoice Number',
+            text: 'Product ID', 
             align: 'start',
             sortable: false,
             value: 'invoiceNumber',
         },
         { 
-            text: 'Client', 
+            text: 'Description', 
             value: 'client', 
             sortable: false,
         },
         { 
-            text: 'Subtotal', 
+            text: 'Quantity', 
             value: 'subtotal', 
             sortable: false,
         },
-        { 
-            text: 'Discount', 
-            value: 'discount', 
-            sortable: false,
-        },
-        { 
-            text: 'Total', 
-            value: 'total',
-            sortable: false,
-        },
+
       ],
 
       desserts: [
         {
             invoiceNumber: 1234,
-            client: 'Ulter Technologies',
-            subtotal: 1000,
-            discount: '0%',
-            total: 1000,
+            client: 'Iphone',
+            subtotal: 1,
         },
       ]
     }
-  }
-};
+
+  },
+  
+}
+// };
 </script>
 
 

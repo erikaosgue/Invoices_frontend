@@ -98,8 +98,6 @@
 
                         </v-menu>
 
-                        <!-- <p>Date in ISO format: <strong>{{ date }}</strong></p> -->
-                    
                     </v-col>
 
                 </v-row>
@@ -108,13 +106,10 @@
 
               <v-btn
                   class="mr-5 mt-10"
-                  type="submit"
                   :disabled="invalid"
-                  @click="postInvoice"  
-                  v-bind:to="'/ShowInvoicesItems/' + invoice"
+                  @click="postInvoice"
               >
                   submit
-                  <!-- <invoice-info :invoice="invoice.name"/> -->
               </v-btn>
 
             <v-btn 
@@ -150,6 +145,7 @@
 import axios from 'axios';
 import { required, digits, max, regex } from 'vee-validate/dist/rules';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+import { mapActions } from 'vuex';
 
   setInteractionMode('eager')
 
@@ -188,6 +184,9 @@ export default {
                 }
             this.items.push(object)
           }
+      })
+      .catch(error => {
+        console.log(error.response)
       });
     },
 
@@ -253,24 +252,35 @@ export default {
         this.$refs.observer.reset()
       },
 
+      ...mapActions(['recieveInvoice']),
+      ...mapActions(['recieveItems']),
+
       postInvoice () {
-        console.log(this.client)
-        console.log(this.client.name)
-        console.log(typeof(this.client))
-        
        
         axios.post('http://localhost:8084/api/v1/invoices', {
           jsonData: JSON.stringify(
             {discount: this.discount, date: this.date, client_id: this.client})
         })
         .then((response) => {
-          var data = response.data
-          console.log("here:", response.data)
-          this.invoice = data.id
-          console.log("id", this.invoice)
+          var invoiceObject = response.data
+          console.log("Herer call items", invoiceObject)
+          this.recieveInvoice(invoiceObject)
+          this.recieveItems(invoiceObject.items)
+          // this.$store.commit('updateInvoice', invoiceObject)
+
+          // console.log("here:", response.data)
+          // this.invoice = data.id
+          // console.log("id", this.invoice)
+        })
+        .catch(error => {
+          console.log(error.response);
         });
-      }
+
+        this.$router.push('ShowInvoicesItems')
+        // this.recieveItems(invoiceObject.items)
+
     }
+  }
 }
 
 </script>

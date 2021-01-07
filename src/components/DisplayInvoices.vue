@@ -1,10 +1,9 @@
 <template>
     <div>
+
     <v-card-title class="mx-auto mt-3">
         <h3 class="display-0.5 mx-auto"  > 
-          <!-- <div id="invoice-info"> 
-            {{ invoice }}
-          </div> -->
+            {{ getInvoice.clientName }}
         </h3>
     </v-card-title>
 
@@ -13,7 +12,7 @@
     <v-card width="500" class="mx-auto mt-3">
         <v-data-table
             :headers="headers"
-            :items="desserts"
+            :items=getInvoiceData
             :items-per-page="5"
             class="elevation-1"
             hide-default-footer
@@ -22,48 +21,62 @@
     </v-card>
     
     <v-spacer></v-spacer>
+
     </div>
 </template>
 
 <script>
 
 
-import axios from 'axios';
+// import { mapGetters } from 'vuex';
 
 export default {
   name: "DisplayInvoices",
-  // props: ['invoice'],
 
-  mounted: function(){
-      console.log("=>",this.$route.params)
-      var url = 'http://localhost:8084/api/v1/invoices/' + this.$route.params.invoice_id
-      console.log(url)
-      axios.get(url)
-        .then((response) => {
-          this.InvoiceData = response.data
-          console.log("==>", this.InvoiceData)
-          for (var i=0; i < this.InvoiceData.length; i++){
-            var data = this.InvoiceData[i]
-            var object = {
-              invoiceNumber: data.invoice_number,
-              client: data.client_name,
-              date: data.date,
-            }
-            this.invoice.push(object)
-            console.log("==>", this.invoice)
-          }
-      })
-      .catch(error => {
-        this.errorMessage = error.message;
-        console.error("There was an error!", error);
-      });
+
+  computed: {
+    getInvoice () {
+      console.log("here1")
+      var invoice = this.$store.state.invoice
+      // console.log("invo", invoice)
+      return invoice
+      // return this.$store.state.invoice
     },
+    getInvoiceData () {
+      console.log("here2")
+      var invoice = this.$store.state.invoice
+       var invoiceData = [
+        {
+            name: 'Invoice Number:',
+            value: invoice.invoiceNumber,
+        },
+        {
+            name: 'Date:',
+            value: invoice.date,
+        },
+        {
+            name: 'Discount:',
+            value: invoice.discount,
+        },
+      ]
+      return invoiceData
+    },
+    getInvoiceID () {
+      console.log("here3")
+    //   var id = this.$store.state.invoice
+    //   console.log("the id", id)
+    //   return id
+      return this.$store.state.invoice
+    },
+  },
+
 
   data () {
+    console.log("here1")
     return {
-      // invoice: null,
+      invoice: null,
       InvoiceData: null,
-      client_id: this.$route.params.id,
+      arrayItems: [],
         
       headers: [
 
@@ -78,23 +91,47 @@ export default {
             sortable: false,
         },
       ],
+      headers1: [
+        {
+            text: 'Invoice Number',
+            align: 'start',
+            sortable: false,
+            value: 'invoiceNumber',
+        },
+        { 
+            text: 'Client', 
+            value: 'client', 
+            sortable: false,
+        },
+        { 
+            text: 'Subtotal', 
+            value: 'subtotal', 
+            sortable: false,
+        },
+        { 
+            text: 'Discount', 
+            value: 'discount', 
+            sortable: false,
+        },
+        { 
+            text: 'Total', 
+            value: 'total',
+            sortable: false,
+        },
+      ],
 
-      desserts: [
+      desserts2: [
         {
-            name: 'Invoice Number:',
-            value: '1234',
-        },
-        {
-            name: 'Date:',
-            value: '21/12/2020',
-        },
-        {
-            name: 'Discount:',
-            value: '0%',
+            invoiceNumber: 1234,
+            client: 'Ulter Technologies',
+            subtotal: 1000,
+            discount: '0%',
+            total: 1000,
         },
       ]
     }
-  }
+  },
+  
 };
 </script>
 
@@ -104,4 +141,3 @@ export default {
     min-height: 0;
 } 
 </style>
-

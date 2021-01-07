@@ -16,7 +16,7 @@
                 }"
             >
                 <v-text-field
-                v-model="quatity"
+                v-model="quantity"
                 :error-messages="errors"
                 label="Quantity"
                 required
@@ -29,6 +29,8 @@
                 rules="required"
             >
                 <v-select
+                item-text="description"
+                item-value="id"
                 v-model="productDesc"
                 :items="items"
                 :error-messages="errors"
@@ -58,9 +60,10 @@
 
             <v-btn
                 class="mr-5 mt-10"
-                type="submit"
                 :disabled="invalid"
+                @click="postItem"
             >
+                <!-- type="submit" -->
                 submit
             </v-btn>
             <v-btn 
@@ -78,7 +81,7 @@
 
 <script>
 
-
+import axios from 'axios';
 import { required, digits, max, regex } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
@@ -107,6 +110,30 @@ import { extend, ValidationObserver, ValidationProvider, setInteractionMode } fr
 export default {
     name: "AddItems",
 
+    mounted: function(){
+      axios.get('http://localhost:8084/api/v1/products')
+        .then((response) => {
+          this.products = response.data
+          for (var i=0; i < this.products.length; i++){
+            var product = this.products[i] 
+            this.items.push(product)
+          }
+      })
+      .catch(error => {
+        console.log(error.response)
+      });
+    },
+
+    computed: {
+      getInvoice () {
+        console.log("here Add items")
+        var invoice = this.$store.state.invoice
+        // console.log("invo", invoice)
+        return invoice
+        // return this.$store.state.invoice
+      }
+    },
+
     components: {
       ValidationProvider,
       ValidationObserver,
@@ -115,14 +142,11 @@ export default {
     data () {
 
       return {
+      products: null,
       quantity: '',
-      productDesc: null,
+      productDesc: [],
       productPrice: '',
       items: [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4',
         ],
       }
     },
@@ -138,6 +162,31 @@ export default {
         this.productPrice = ''
         this.$refs.observer.reset()
       },
+      postItem () {
+        console.log("posting product",this.productDesc)
+        let jsonData = JSON.stringify(
+          {
+            quantity: this.quantity, 
+            price: this.productPrice, 
+            product_id: this.productDesc,
+            invoice_id: '62734460-1166-4938-a615-5c1f28d138a1'
+          })
+          console.log("json Data", jsonData)
+        axios.post('http://localhost:8084/api/v1/items', {
+          jsonData
+        })
+        .then((response) => {
+          var invoiceObject = response.data
+          console.log("Herer call items", invoiceObject)
+         
+        .catch(error => {
+          console.log(error.response);
+        });
+
+        this.$router.push('ShowInvoicesItems')
+        // this.recieveItems(invoiceObject.items)
+
+    }
     },
   };
 

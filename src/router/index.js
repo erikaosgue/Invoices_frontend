@@ -32,7 +32,8 @@ const routes = [
     component: CreateItem
   },
   {
-    path: "/ShowInvoicesItems/:id",
+    path: "/ShowInvoicesItems",
+    // path: "/ShowInvoicesItems/:id",
     name: "ShowInvoicesItems",
     component: ShowInvoicesItems
   },
