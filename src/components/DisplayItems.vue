@@ -13,7 +13,7 @@
         <v-card width="700" class="mx-auto mt-3 mb-0">
             <v-data-table
                 :headers="headers"
-                :items="desserts"
+                :items=getItems
                 :items-per-page="10"
                 class="elevation-1"
                 hide-default-footer
@@ -37,42 +37,61 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+// import { mapActions, mapGetters } from 'vuex'
 
 // import { mapGetters } from 'vuex';
-import axios from 'axios';
+// import axios from 'axios';
+import { mapFields } from 'vuex-map-fields' 
 
 export default {
   name: "DisplayItems",
 
-  mounted: function(){
-      var invoice_id = this.$store.state.invoice.id
-      console.log(invoice_id)
-      // axios.get('http://localhost:8084/api/v1/invoices/{id}/items')
-      axios.get('http://localhost:8084/api/v1/items')
-        .then((response) => {
-          this.clientsData = response.data
-          for (var i=0; i < this.clientsData.length; i++){
-              var data = this.clientsData[i] 
-              var object = {
-                  invoiceNumber: data.item_number, 
-                  client: data.name,
-                  subtotal: data.quantity
-                }
-            this.desserts.push(object)
-            console.log("desert", this.desserts)
+  watch: {
+    items() {
+      // let value = this.invoice.id
+      //  axios.get(
+          // 'http://localhost:8084/api/v1/invoices/' + value + '/items')
+          // .then((response) => {
+          // let items = response.data
+          // // var displayItems = []
+          // for(let i = 0; i < items.length; i++) {
+          //   var objetc = {
+          //     invoiceNumber: items[i].item_number,
+          //     client: items[i].name,
+          //     subtotal: items[i].subtotal,
+          //   }
+          //   console.log("desserts", this.desserts)
+          //   this.desserts.push(objetc)
           }
-      })
-      .catch(error => {
-          console.log(error.response)
-      });
-    },
-  
-
-  methods: {
-    ...mapActions(['recieveItems']),
+          // this.items = items
+    //       })
+    //       .catch(error => {
+    //         console.log("error message", error.response)
+    //       })
+    //       console.log("==>", value.invoice_id)
+    // }
   },
-  
+
+  computed: {
+
+    ...mapFields(['items', 'invoice']),
+
+    getItems () {
+      var items = this.items
+      var displayItems = []
+      for(let i = 0; i < items.length; i++) {
+        var objetc = {
+            product_id: items[i].item_number,
+            product_name: items[i].name,
+            quantity: items[i].quantity,
+        }
+        displayItems.push(objetc)
+      }
+      return displayItems
+    },
+    
+
+  },
 
   data () {
     return {
@@ -82,28 +101,20 @@ export default {
             text: 'Product ID', 
             align: 'start',
             sortable: false,
-            value: 'invoiceNumber',
+            value: 'product_id',
         },
         { 
             text: 'Description', 
-            value: 'client', 
+            value: 'product_name', 
             sortable: false,
         },
         { 
             text: 'Quantity', 
-            value: 'subtotal', 
+            value: 'quantity', 
             sortable: false,
         },
 
       ],
-
-      desserts: [
-        {
-            invoiceNumber: 1234,
-            client: 'Iphone',
-            subtotal: 1,
-        },
-      ]
     }
 
   },

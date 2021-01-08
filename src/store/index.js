@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 //create store
 
-// import axios from 'axios'
+import axios from 'axios'
+import { updateField, getField  } from 'vuex-map-fields'
 export default new Vuex.Store({
   
   state: {
@@ -18,21 +19,21 @@ export default new Vuex.Store({
       id: 0
     },
     items: [
-      
     ]
   },
   mutations: {
     updateInvoice(state, invoiceObject) {
-      state.invoice['clientName'] = invoiceObject.client_name
+      
+      state.invoice.clientName = invoiceObject.client_name
       state.invoice.discount = invoiceObject.discount
       state.invoice.date = invoiceObject.date
       state.invoice.invoiceNumber = invoiceObject.invoice_number
       state.invoice.id = invoiceObject.id
     },
     updateItems(state, itemsArray) {
-      console.log("mutations ", itemsArray)
       state.items = itemsArray
-    }
+    },
+    updateField
   },
 
   actions: {
@@ -40,59 +41,24 @@ export default new Vuex.Store({
       commit('updateInvoice', invoice)
     },
 
-    // async recieveItems({ commit, state}) {
-    //   const response = await axios.get(
-    recieveItems ({ commit }, itemsArray) {
-      console.log(itemsArray)
+    
+    recieveItems ({ commit }, invoice_id) {
 
-      // console.log("actions///", getters.getInvoiceID)
-      // axios.get(
-      //     'http://localhost:8084/api/v1/invoices/' + state.invoice.id)
-      //     .then((response) => {
-      //     let data = response.data
-      //     console.log("in actions", data.items)
-      //     // for (var i=0; i < this.clientsData.length; i++){
-      //     //   var data = this.clientsData[i] 
-      //     //     var object = {
-      //     //       name: data.name, 
-      //     //       id: data.id
-      //     //       }
-      //     //   this.items.push(object)
-      //     // }
-          // commit('updateItems', data.items)
-          var getInvoiceID = []
-          commit('updateItems', getInvoiceID)
-
-      // })
-      // .catch(error => {
-      //   console.log(error.response)
-      // });
-        
-          // for (var i=0; i < invoice.length; i++){
-          //   var data = this.clientsData[i] 
-          //     var object = {
-          //       name: data.name, 
-          //       id: data.id
-          //       }
-          //   this.items.push(object)
-          // }
-     
-      
+      axios.get(
+          'http://localhost:8084/api/v1/invoices/' + invoice_id + '/items')
+          .then((response) => {
+          let arrayItems = response.data
+          commit('updateItems', arrayItems)
+          })
+          .catch(error => {
+            console.log("error message", error.response)
+          })      
     },     
   },
   modules: {},
 
   getters: {
-    getInvoice: (state) => {
-      return state.invoice
-    },
-    getItems: (state) => {
-      return state.items
-    },
-    getInvoiceID: (state) => {
-      console.log("getter", state.invoice.id)
-      return state.invoice.id
-    },
+    getField
   },
 
 });

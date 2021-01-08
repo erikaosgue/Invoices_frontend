@@ -1,5 +1,11 @@
 <template>
   <v-app>
+    
+    <v-card width="400" class="mx-auto mt-15 mb-0" flat>
+        <v-card-title class="mx-auto mt-0">
+            <h3 class="display-0.5 mx-auto" > Create New Invoice </h3>
+        </v-card-title>
+    </v-card>
     <v-card width="400" class="mx-auto mt-10">
       <div class="pa-6">
         <validation-observer
@@ -9,14 +15,14 @@
             <form @submit.prevent="submit">
             <validation-provider
                 v-slot="{ errors }"
-                name="invoiceNumber"
+                name="invoice_number"
 
                 :rules="{
                 required: false,
                 }"
             >
                 <v-text-field
-                v-model="invoiceNumber"
+                v-model="invoice_number"
                 :error-messages="errors"
                 label="Invoice Number"
                 disabled
@@ -122,21 +128,6 @@
       </div>
     </v-card>
 
-    <v-card
-      class="mx-auto mt-10"
-      flat
-      outline
-    >   
-        <div>
-            <v-btn
-            class="ma-2"
-            outlined
-            color="indigo"
-            to="/CreateItem">Add Item
-            </v-btn>
-        </div>
-    </v-card>
-
   </v-app>
 </template>
 
@@ -175,9 +166,9 @@ export default {
     mounted: function(){
       axios.get('http://localhost:8084/api/v1/clients')
         .then((response) => {
-          this.clientsData = response.data
-          for (var i=0; i < this.clientsData.length; i++){
-            var data = this.clientsData[i] 
+          var clientsData = response.data
+          for (var i=0; i < clientsData.length; i++){
+            var data = clientsData[i] 
               var object = {
                 name: data.name, 
                 id: data.id
@@ -202,13 +193,11 @@ export default {
       menu1: false,
         // ----- End date picker --- //
     
-      clientsData: null,
-      invoice: '',
-      // '1bb0-405a-8880-25684e21b87p',
       discount: '',
-      invoiceNumber: '',
+      invoice_number: '',
       client: null,
       items: [
+        
       ],
 
     }),
@@ -263,21 +252,18 @@ export default {
         })
         .then((response) => {
           var invoiceObject = response.data
-          console.log("Herer call items", invoiceObject)
+          console.log("Herer posting Invoice", invoiceObject)
           this.recieveInvoice(invoiceObject)
-          this.recieveItems(invoiceObject.items)
-          // this.$store.commit('updateInvoice', invoiceObject)
+          this.recieveItems(invoiceObject.id)
 
-          // console.log("here:", response.data)
-          // this.invoice = data.id
-          // console.log("id", this.invoice)
+
+          // sessionStorage.setItem('invoice', JSON.stringify(invoiceObject));
         })
         .catch(error => {
-          console.log(error.response);
+          console.log("error message", error.response);
         });
 
         this.$router.push('ShowInvoicesItems')
-        // this.recieveItems(invoiceObject.items)
 
     }
   }

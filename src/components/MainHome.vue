@@ -46,11 +46,9 @@ export default {
   mounted: function(){
     axios.get('http://localhost:8084/api/v1/invoices')
       .then((response) => {
-        this.invoiceData = response.data
-        console.log(response.data)
-        for (var i=0; i < this.invoiceData.length; i++){
-          var data = this.invoiceData[i]
-          console.log("data", data)
+        var invoiceData = response.data
+        for (var i=0; i < invoiceData.length; i++){
+          var data = invoiceData[i]
           var object = {
               invoiceNumber: data.invoice_number,
               client: data.client_name,
@@ -66,9 +64,7 @@ export default {
   data () {
 
     return {
-      invoiceData: null,
 
-        
       headers: [
         {
             text: 'Invoice Number',
@@ -99,44 +95,9 @@ export default {
       ],
 
       desserts: [
-        {
-            invoiceNumber: 1234,
-            client: 'Ulter Technologies',
-            subtotal: 1000,
-            discount: '0%',
-            total: 1000,
-        },
       ]
     }
   },
-
-  methods: {
-
-    GetInvoices() {
-      
-      axios.get('http://localhost:8084/invoices')
-      .then((response) => {
-        this.invoiceData = response.data
-        for (var i=0; i < this.invoiceData.length; i++){
-          var data = this.invoiceData[i]
-          console.log("data", data)
-          // var object = {
-          //     invoiceNumber: data.invoiceNumber,
-          //     client: 'Ulter Technologies',
-          //     subtotal: 1000,
-          //     discount: '0%',
-          //     total: 1000,
-          //     name: post.Name,
-          //     score: post.Puntaje,
-          //   }
-          // this.desserts.push(object)
-        }
-      });
-    }
-  },
-
-
-
 };
 </script>
 

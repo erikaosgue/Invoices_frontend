@@ -18,10 +18,9 @@ import DisplayItems from "@/components/DisplayItems.vue";
 export default {
   name: "ShowInvoicesItems",
   components: {
-    // HelloWorld,
     Navigation,
-    DisplayItems,
     DisplayInvoices,
+    DisplayItems,
     Footer
   }
 };

@@ -38,9 +38,8 @@ export default {
     getInvoice () {
       console.log("here1")
       var invoice = this.$store.state.invoice
-      // console.log("invo", invoice)
+      console.log("invoice Gettter", invoice)
       return invoice
-      // return this.$store.state.invoice
     },
     getInvoiceData () {
       console.log("here2")
@@ -61,18 +60,10 @@ export default {
       ]
       return invoiceData
     },
-    getInvoiceID () {
-      console.log("here3")
-    //   var id = this.$store.state.invoice
-    //   console.log("the id", id)
-    //   return id
-      return this.$store.state.invoice
-    },
   },
 
 
   data () {
-    console.log("here1")
     return {
       invoice: null,
       InvoiceData: null,
@@ -91,44 +82,7 @@ export default {
             sortable: false,
         },
       ],
-      headers1: [
-        {
-            text: 'Invoice Number',
-            align: 'start',
-            sortable: false,
-            value: 'invoiceNumber',
-        },
-        { 
-            text: 'Client', 
-            value: 'client', 
-            sortable: false,
-        },
-        { 
-            text: 'Subtotal', 
-            value: 'subtotal', 
-            sortable: false,
-        },
-        { 
-            text: 'Discount', 
-            value: 'discount', 
-            sortable: false,
-        },
-        { 
-            text: 'Total', 
-            value: 'total',
-            sortable: false,
-        },
-      ],
-
-      desserts2: [
-        {
-            invoiceNumber: 1234,
-            client: 'Ulter Technologies',
-            subtotal: 1000,
-            discount: '0%',
-            total: 1000,
-        },
-      ]
+  
     }
   },
   

@@ -1,5 +1,10 @@
 <template>
   <v-app>
+    <v-card width="400" class="mx-auto mt-15 mb-0" flat>
+        <v-card-title class="mx-auto mt-0">
+            <h3 class="display-0.5 mx-auto" > Create New Item </h3>
+        </v-card-title>
+    </v-card>
     <v-card width="400" class="mx-auto mt-10">
       <div class="pa-6">
         <validation-observer
@@ -31,8 +36,8 @@
                 <v-select
                 item-text="description"
                 item-value="id"
-                v-model="productDesc"
-                :items="items"
+                v-model="product_name"
+                :items="item"
                 :error-messages="errors"
                 label="Product Description"
                 data-vv-name="Client"
@@ -51,7 +56,7 @@
                 <!-- type="number" -->
                 <v-text-field
                 suffix="USD"
-                v-model="productPrice"
+                v-model="product_price"
                 :error-messages="errors"
                 label="Product Price"
                 required
@@ -81,6 +86,8 @@
 
 <script>
 
+import { mapFields } from 'vuex-map-fields';
+import  { mapActions } from 'vuex'
 import axios from 'axios';
 import { required, digits, max, regex } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
@@ -113,10 +120,10 @@ export default {
     mounted: function(){
       axios.get('http://localhost:8084/api/v1/products')
         .then((response) => {
-          this.products = response.data
-          for (var i=0; i < this.products.length; i++){
-            var product = this.products[i] 
-            this.items.push(product)
+          var products = response.data
+          for (var i=0; i < products.length; i++){
+            var product = products[i] 
+            this.item.push(product)
           }
       })
       .catch(error => {
@@ -125,13 +132,8 @@ export default {
     },
 
     computed: {
-      getInvoice () {
-        console.log("here Add items")
-        var invoice = this.$store.state.invoice
-        // console.log("invo", invoice)
-        return invoice
-        // return this.$store.state.invoice
-      }
+      ...mapFields(['items', 'invoice'])
+
     },
 
     components: {
@@ -142,11 +144,11 @@ export default {
     data () {
 
       return {
-      products: null,
+     
       quantity: '',
-      productDesc: [],
-      productPrice: '',
-      items: [
+      product_name: [],
+      product_price: '',
+      item: [
         ],
       }
     },
@@ -162,33 +164,34 @@ export default {
         this.productPrice = ''
         this.$refs.observer.reset()
       },
+      ... mapActions(['recieveItems']),
+
       postItem () {
-        console.log("posting product",this.productDesc)
         let jsonData = JSON.stringify(
           {
             quantity: this.quantity, 
-            price: this.productPrice, 
-            product_id: this.productDesc,
-            invoice_id: '62734460-1166-4938-a615-5c1f28d138a1'
+            price: this.product_price, 
+            product_id: this.product_name,
+            invoice_id: this.invoice.id
           })
-          console.log("json Data", jsonData)
-        axios.post('http://localhost:8084/api/v1/items', {
+          axios.post('http://localhost:8084/api/v1/items', {
           jsonData
-        })
-        .then((response) => {
-          var invoiceObject = response.data
-          console.log("Herer call items", invoiceObject)
-         
-        .catch(error => {
-          console.log(error.response);
-        });
+          })
+          .then((response) => {
+            var invoiceObject = response.data
+            // Invoice_is is correct !DOnt change  it!
+            this.recieveItems(invoiceObject.invoice_id)
 
-        this.$router.push('ShowInvoicesItems')
-        // this.recieveItems(invoiceObject.items)
+          })
+          .catch(error => {
+            console.log(error.response);
+          });
 
-    }
-    },
-  };
+          this.$router.push('ShowInvoicesItems')
+
+        },
+  },
+}
 
 </script>
 
