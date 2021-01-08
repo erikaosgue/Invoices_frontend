@@ -113,8 +113,7 @@
               <v-btn
                   class="mr-5 mt-10"
                   :disabled="invalid"
-                  @click="postInvoice"
-              >
+                  @click="postInvoice">
                   submit
               </v-btn>
 
@@ -123,6 +122,14 @@
                 @click="clear">
                 clear
             </v-btn>
+
+            <v-btn 
+                class="mt-10 ml-6"
+                color="red"
+                @click="$router.push('/')">
+                Canel
+            </v-btn>
+
             </form>
         </validation-observer>
       </div>
@@ -252,12 +259,11 @@ export default {
         })
         .then((response) => {
           var invoiceObject = response.data
-          console.log("Herer posting Invoice", invoiceObject)
           this.recieveInvoice(invoiceObject)
           this.recieveItems(invoiceObject.id)
 
 
-          // sessionStorage.setItem('invoice', JSON.stringify(invoiceObject));
+          sessionStorage.setItem('invoice', JSON.stringify(invoiceObject));
         })
         .catch(error => {
           console.log("error message", error.response);

@@ -40,6 +40,7 @@ const routes = [
   {
     path: "/CreateFullInvoice",
     name: "CreateFullInvoice",
+    params: {},
     component: CreateFullInvoice
   },
 ];

@@ -7,28 +7,22 @@ Vue.use(Vuex);
 //create store
 
 import axios from 'axios'
+
 import { updateField, getField  } from 'vuex-map-fields'
+
 export default new Vuex.Store({
   
   state: {
-    invoice: {
-      invoiceNumber: 0,
-      clientName: 'Erika',
-      discount: '0',
-      date: '13-abril-1994',
-      id: 0
-    },
-    items: [
-    ]
+    invoice: {},
+    items: []
   },
   mutations: {
     updateInvoice(state, invoiceObject) {
+
+      state.invoice = invoiceObject
+      console.log(state.invoice)
       
-      state.invoice.clientName = invoiceObject.client_name
-      state.invoice.discount = invoiceObject.discount
-      state.invoice.date = invoiceObject.date
-      state.invoice.invoiceNumber = invoiceObject.invoice_number
-      state.invoice.id = invoiceObject.id
+     
     },
     updateItems(state, itemsArray) {
       state.items = itemsArray
@@ -58,6 +52,13 @@ export default new Vuex.Store({
   modules: {},
 
   getters: {
+    getInvoice(state) {
+      console.log("The getter items",state.items)
+      return state.invoice
+    },
+    getAllItems(state) {
+      return state.items
+    },
     getField
   },
 

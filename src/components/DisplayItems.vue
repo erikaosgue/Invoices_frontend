@@ -13,24 +13,47 @@
         <v-card width="700" class="mx-auto mt-3 mb-0">
             <v-data-table
                 :headers="headers"
-                :items=getItems
+                :items=allItems
                 :items-per-page="10"
                 class="elevation-1"
                 hide-default-footer
-            ></v-data-table>
+            >
+                <template v-slot:no-data>
+                  <v-alert :value="true" color="grey">
+                    No items have been created
+                  </v-alert>
+                </template>
+            </v-data-table>
         </v-card>
         
         
-        <!-- Button Create New Invoice -->
+        <!-- Button Create New items -->
         <v-card width="700" class="mx-auto mt-3" flat>
-            
                 <v-btn
-                class="mt-5"
+                class="mt-5 ml-0"
+                width="200"
                 outlined
                 color="indigo"
-                @click="$router.push('CreateItem')">Add Item
+                @click="addItem">Add Item
                 </v-btn>
+          
             
+        <!-- button to finish and view invoice -->
+                <v-btn
+                class="mt-5 ml-9"
+                outlined
+                color="indigo"
+                @click="$router.push('CreateFullInvoice')">Finish & view Invoice
+                </v-btn>
+
+      <!-- go home Button -->
+                <v-btn
+                class="mt-5 ml-9"
+                width="200"
+                outlined
+                color="indigo"
+                @click="$router.push('/')">Home
+                </v-btn>
         </v-card>
     </div>
   </v-app>
@@ -40,36 +63,33 @@
 // import { mapActions, mapGetters } from 'vuex'
 
 // import { mapGetters } from 'vuex';
-// import axios from 'axios';
+import axios from 'axios';
 import { mapFields } from 'vuex-map-fields' 
 
 export default {
   name: "DisplayItems",
 
-  watch: {
-    items() {
-      // let value = this.invoice.id
-      //  axios.get(
-          // 'http://localhost:8084/api/v1/invoices/' + value + '/items')
-          // .then((response) => {
-          // let items = response.data
-          // // var displayItems = []
-          // for(let i = 0; i < items.length; i++) {
-          //   var objetc = {
-          //     invoiceNumber: items[i].item_number,
-          //     client: items[i].name,
-          //     subtotal: items[i].subtotal,
-          //   }
-          //   console.log("desserts", this.desserts)
-          //   this.desserts.push(objetc)
-          }
-          // this.items = items
-    //       })
-    //       .catch(error => {
-    //         console.log("error message", error.response)
-    //       })
-    //       console.log("==>", value.invoice_id)
-    // }
+  mounted: function() {
+      
+      var invoice = JSON.parse(sessionStorage.invoice)
+
+        axios.get('http://localhost:8084/api/v1/invoices/' + invoice.id + '/items')
+        .then((response) => {
+            let arrayItems = response.data
+            for(let i = 0; i < arrayItems.length; i++) {
+                var object = {
+                  product_id: arrayItems[i].item_number,
+                  product_name: arrayItems[i].name,
+                  quantity: arrayItems[i].quantity,
+                }
+                this.allItems.push(object)
+            }
+          })
+          .catch(e => {
+              console.log(e.response)
+            });
+        return this.allItems
+
   },
 
   computed: {
@@ -77,6 +97,7 @@ export default {
     ...mapFields(['items', 'invoice']),
 
     getItems () {
+      
       var items = this.items
       var displayItems = []
       for(let i = 0; i < items.length; i++) {
@@ -95,7 +116,8 @@ export default {
 
   data () {
     return {
-      id: '',
+      allItems: [],
+     
       headers: [
         {
             text: 'Product ID', 
@@ -118,9 +140,31 @@ export default {
     }
 
   },
+  methods: {
+    addItem () {
+    
+    var invoice = JSON.parse(sessionStorage.invoice)
+
+    axios.get('http://localhost:8084/api/v1/invoices/' + invoice.id)
+      .then((response) => {
+        var invoiceObject = response.data
+        console.log("numero de items =>", invoiceObject.num_items)
+        if (invoiceObject.num_items === 10) {
+          alert("You can only add up to 10 items")
+        }
+        else {
+          this.$router.push('CreateItem')
+        }
+      })
+      .catch(error => {
+        console.log("error message", error.response)
+      })
+    }
+  }
+  
   
 }
-// };
+
 </script>
 
 

@@ -167,24 +167,34 @@ export default {
       ... mapActions(['recieveItems']),
 
       postItem () {
+
+        var invoice = JSON.parse(sessionStorage.invoice)
         let jsonData = JSON.stringify(
           {
             quantity: this.quantity, 
             price: this.product_price, 
             product_id: this.product_name,
-            invoice_id: this.invoice.id
+            invoice_id: invoice.id
           })
+          console.log(jsonData)
           axios.post('http://localhost:8084/api/v1/items', {
           jsonData
           })
           .then((response) => {
             var invoiceObject = response.data
-            // Invoice_is is correct !DOnt change  it!
-            this.recieveItems(invoiceObject.invoice_id)
+            if (invoiceObject.status === 'max_items') {
+              console.log("full invoice", invoice)
+              alert("You can only add up to 10 items")
+            }
+            else {
+
+              // Invoice_is is correct !DOnt change  it!
+              this.recieveItems(invoiceObject.invoice_id)
+            }
 
           })
           .catch(error => {
-            console.log(error.response);
+            console.log("error >2", error.response);
           });
 
           this.$router.push('ShowInvoicesItems')

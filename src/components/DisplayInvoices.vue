@@ -3,7 +3,7 @@
 
     <v-card-title class="mx-auto mt-3">
         <h3 class="display-0.5 mx-auto"  > 
-            {{ getInvoice.clientName }}
+            {{ getInvoice.client_name }}
         </h3>
     </v-card-title>
 
@@ -35,23 +35,29 @@ export default {
 
 
   computed: {
+
     getInvoice () {
-      console.log("here1")
       var invoice = this.$store.state.invoice
-      console.log("invoice Gettter", invoice)
+
+      if (Object.keys(invoice).length == 0) {
+        invoice = JSON.parse(sessionStorage.invoice)
+      }
       return invoice
     },
     getInvoiceData () {
-      console.log("here2")
       var invoice = this.$store.state.invoice
+      if (Object.keys(invoice).length == 0) {
+          invoice = JSON.parse(sessionStorage.invoice)
+      }
+      var new_date = this.my_split(invoice.date)
        var invoiceData = [
         {
             name: 'Invoice Number:',
-            value: invoice.invoiceNumber,
+            value: invoice.invoice_number,
         },
         {
             name: 'Date:',
-            value: invoice.date,
+            value: new_date,
         },
         {
             name: 'Discount:',
@@ -60,6 +66,15 @@ export default {
       ]
       return invoiceData
     },
+  },
+  methods: {
+    my_split(str) {
+
+      var n = str.split(" ")
+      var new_str = n[1] + '/' + n[2] + '/' + n[3]
+      return new_str
+
+    }
   },
 
 
