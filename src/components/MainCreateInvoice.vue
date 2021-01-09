@@ -111,23 +111,26 @@
             </validation-provider>
 
               <v-btn
-                  class="mr-5 mt-10"
+                  color="deep-orange lighten-3"
+                  class="mr-2 mt-10"
                   :disabled="invalid"
                   @click="postInvoice">
                   submit
               </v-btn>
 
-            <v-btn 
-                class="mt-10"
+            <v-btn
+                color="blue-grey lighten-3"
+                class="mt-10 mr-2"
+                width="100"
                 @click="clear">
                 clear
             </v-btn>
 
             <v-btn 
-                class="mt-10 ml-6"
-                color="red"
+                class="mt-10"
+                color="blue-grey lighten-3"
                 @click="$router.push('/')">
-                Canel
+                Cancel
             </v-btn>
 
             </form>
@@ -259,17 +262,14 @@ export default {
         })
         .then((response) => {
           var invoiceObject = response.data
-          this.recieveInvoice(invoiceObject)
-          this.recieveItems(invoiceObject.id)
-
 
           sessionStorage.setItem('invoice', JSON.stringify(invoiceObject));
+          this.$router.push('ShowInvoicesItems')
         })
         .catch(error => {
           console.log("error message", error.response);
         });
 
-        this.$router.push('ShowInvoicesItems')
 
     }
   }

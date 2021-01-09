@@ -70,7 +70,7 @@
             >
                 <!-- type="submit" -->
                 submit
-            </v-btn>
+            </v-btn>  
             <v-btn 
                 class="mt-10"
                 @click="clear">
@@ -204,5 +204,4 @@ export default {
 }
 
 </script>
-
 <style scoped></style>

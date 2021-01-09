@@ -1,14 +1,11 @@
 <template>
   <v-app>
-    <v-card width="900" class="mx-auto mt-3">
-
-        <v-card-title class="mx-auto mt-3">
-            <h2 class="display-0.5 mx-auto"  > {{ getInvoice.client_name }}</h2>
-        </v-card-title>
-
         <!-- table Section -->
 
-        <v-card width="700" class="mx-auto mt-3">
+        <v-card width="700" class="mx-auto mt-15">
+            <v-card-title class="mx-auto mt-3">
+                <h2 class="display-0.5"  > {{ getInvoice.client_name }}</h2>
+            </v-card-title>
             <v-data-table
                 :headers="headers1"
                 :items=getInvoiceData
@@ -19,59 +16,57 @@
                 
             ></v-data-table>
 
-        </v-card>
-
-        <!-- table Section -->
-        <v-card width="700" class="mx-auto mt-5">
-            <v-card-title class="mx-auto">
-                <h4 class="display-0.5 mx-auto"> Items </h4>
-            </v-card-title>
-        </v-card>
-
-        <v-card width="700" class="mx-auto mt-2 mb-2">
+            <v-card width="700" class="mx-auto mt-5" flat>
+                <v-card-title class="mx-auto">
+                    <h5 class="display-0.5"> List Items </h5>
+                </v-card-title>
+            </v-card>
             <v-data-table
                 :headers="headers2"
                 :items="allItems"
                 :items-per-page="5"
                 hide-default-footer
-                class="elevation-0"
-            >
-            <template v-slot:no-data>
-                <v-alert :value="true" color="grey" class="mb-4 mt-4">
-                   You have no items
-                </v-alert>
-            </template>
-            
+                class="elevation-0">
+
+                <template v-slot:no-data>
+                    <v-alert :value="true" color="grey" class="mb-4 mt-4">
+                    You have no items
+                    </v-alert>
+                </template>
+        
             </v-data-table>
-        </v-card>
-                <!-- hide-default-footer -->
-        <v-card width="700" class="mx-auto  mb-15">
-             <v-data-table
+        
+            <v-card-title class="mx-auto mt-3">
+                <h5 class="display-0.5"  > Total</h5>
+            </v-card-title>
+            <v-data-table
                 :headers="headers3"
                 :items="desserts3"
                 :items-per-page="5"
                 class="elevation-1"
                 hide-default-footer
-                hide-default-header
-                    
-                
-            >
+                hide-default-header>
             </v-data-table>
         </v-card>
+
+
+
+        <!-- hide-default-footer -->
+
+        <v-card width="700" class="mx-auto  mb-10">
+        </v-card>
+
+
+        <v-card width="700" class="mx-auto mb-15" flat>
+            <div class="text-center">
+                <v-btn
+                    color="primary"
+                    class="mr-2 mb-15 mt-0"  
+                    @click="$router.push('CreateInvoice')">Create a New Invoice
+                </v-btn>
+            </div>
+        </v-card>
         
-      <v-layout justify-center>
-         <v-card-actions>
-         <v-btn
-                class="mb-15"
-                outlined
-                color="indigo"
-                @click="$router.push('CreateInvoice')">Create a New Invoice
-         </v-btn>
-        </v-card-actions>
-        </v-layout>
-       
-        
-    </v-card>
 
   </v-app>
 </template>
@@ -98,7 +93,7 @@ export default {
                     item_number: arrayItems[i].item_number,
                     item_name: arrayItems[i].name,
                     item_price: arrayItems[i].price.toString() + " USD",
-                    total: arrayItems[i].total,
+                    total: arrayItems[i].total.toString() + " USD",
                     quantity: arrayItems[i].quantity,
                 }
                 this.allItems.push(object)
@@ -181,11 +176,13 @@ export default {
             text: '', 
             value: 'name', 
             sortable: false,
+            align: 'start'
         },
         { 
             text: '', 
             value: 'value',
             sortable: false,
+            align: 'start'
         },
       ],
         allItems: [],

@@ -27,9 +27,6 @@
 
 <script>
 
-
-// import { mapGetters } from 'vuex';
-
 export default {
   name: "DisplayInvoices",
 
@@ -61,7 +58,7 @@ export default {
         },
         {
             name: 'Discount:',
-            value: invoice.discount,
+            value: invoice.discount + '%',
         },
       ]
       return invoiceData
@@ -90,6 +87,7 @@ export default {
             text: '', 
             value: 'name', 
             sortable: false,
+  
         },
         { 
             text: '', 

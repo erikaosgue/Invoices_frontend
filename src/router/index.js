@@ -5,7 +5,6 @@ import CreateItem from "../views/CreateItem.vue";
 import CreateInvoice from "../views/CreateInvoice.vue";
 import ShowInvoicesItems from "../views/ShowInvoicesItems"
 import CreateFullInvoice from "../views/CreateFullInvoice"
-// import DisplayInvoices from "../components/DisplayInvoices"
 
 
 Vue.use(VueRouter);
@@ -20,11 +19,6 @@ const routes = [
     path: "/CreateInvoice",
     name: "CreateInvoice",
     component: CreateInvoice
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // component: () =>
-    //   import(/* webpackChunkName: "about" */ "../views/CreateInvoice.vue")
   },
   {
     path: "/CreateItem",
@@ -33,7 +27,6 @@ const routes = [
   },
   {
     path: "/ShowInvoicesItems",
-    // path: "/ShowInvoicesItems/:id",
     name: "ShowInvoicesItems",
     component: ShowInvoicesItems
   },

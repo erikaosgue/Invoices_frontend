@@ -1,16 +1,15 @@
 <template>
   <v-app>
     <div>
-        <v-card width="700" class="mx-auto mt-15 mb-0" flat>
-            <v-card-title class="mx-auto mt-0">
+        <v-card width="105" class="mx-auto mt-10 mb-0" flat>
+            <v-card-title class="mx-auto">
                 <h3 class="display-0.5 " > Items </h3>
             </v-card-title>
         </v-card>
-    
 
     <!-- table Section -->
 
-        <v-card width="700" class="mx-auto mt-3 mb-0">
+        <v-card width="700" class="mx-auto mt-3 mb-0 erika">
             <v-data-table
                 :headers="headers"
                 :items=allItems
@@ -25,44 +24,28 @@
                 </template>
             </v-data-table>
         </v-card>
-        
-        
-        <!-- Button Create New items -->
-        <v-card width="700" class="mx-auto mt-3" flat>
-                <v-btn
-                class="mt-5 ml-0"
-                width="200"
-                outlined
-                color="indigo"
-                @click="addItem">Add Item
-                </v-btn>
-          
-            
-        <!-- button to finish and view invoice -->
-                <v-btn
-                class="mt-5 ml-9"
-                outlined
-                color="indigo"
-                @click="$router.push('CreateFullInvoice')">Finish & view Invoice
-                </v-btn>
 
-      <!-- go home Button -->
-                <v-btn
-                class="mt-5 ml-9"
-                width="200"
-                outlined
-                color="indigo"
-                @click="$router.push('/')">Home
-                </v-btn>
-        </v-card>
+        <div class="text-center pt-5">
+          <v-btn
+            color="primary"
+            class="mr-2"  
+            @click="addItem">
+            Add Item
+          </v-btn>
+            <v-btn
+              class="mr-2"
+              color="primary"
+              @click="$router.push('CreateFullInvoice')">
+              Finish & view Invoice
+             
+            </v-btn>
+        </div>
     </div>
   </v-app>
 </template>
 
 <script>
-// import { mapActions, mapGetters } from 'vuex'
 
-// import { mapGetters } from 'vuex';
 import axios from 'axios';
 import { mapFields } from 'vuex-map-fields' 
 
@@ -70,8 +53,8 @@ export default {
   name: "DisplayItems",
 
   mounted: function() {
-      
-      var invoice = JSON.parse(sessionStorage.invoice)
+    
+    var invoice = JSON.parse(sessionStorage.invoice)
 
         axios.get('http://localhost:8084/api/v1/invoices/' + invoice.id + '/items')
         .then((response) => {
@@ -121,17 +104,19 @@ export default {
       headers: [
         {
             text: 'Product ID', 
-            align: 'start',
+            align: 'center',
             sortable: false,
             value: 'product_id',
         },
         { 
             text: 'Description', 
+            align: 'center',
             value: 'product_name', 
             sortable: false,
         },
         { 
             text: 'Quantity', 
+            align: 'center',
             value: 'quantity', 
             sortable: false,
         },
@@ -168,4 +153,7 @@ export default {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+
+
+</style>

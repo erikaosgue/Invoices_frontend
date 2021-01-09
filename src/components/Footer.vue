@@ -1,11 +1,15 @@
 <template>
-  <footer>
-    Ulter Technology
-  </footer>
+<v-footer height="auto" color="indigo" dark fixed app>
+  <v-layout justify-center row wrap>
+    <v-flex color="indigo" dark py-3 text-xs-center white--text xs12>
+      &copy;2021 — <strong>Ulter Technology</strong>
+    </v-flex>
+  </v-layout>
+</v-footer>
 </template>
 
 <script>
-// import FriendStore from "../stores/FriendStore"
+
 export default {
   name: "Footer"
 };
@@ -13,11 +17,7 @@ export default {
 
 <style scoped>
 footer {
-  background: #333;
-  color: white;
-  margin-top: 20px;
   padding: 20px;
   text-align: center;
-  width: 100%;
 }
 </style>

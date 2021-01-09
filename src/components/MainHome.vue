@@ -100,7 +100,7 @@
           class="mr-2"
           @click="editItem(item)"
         >
-          mdi-pencil
+          mdi-eye
         </v-icon>
         
       </template>
@@ -110,22 +110,27 @@
   </v-card>
 
   <!-- Button to create a new invoice  -->
+
+   <v-card-title class="mx-auto mt-0 mb-10">
+
    <v-card
-      width="130" 
-      class="mx-auto mt-10"
+      width="300" 
+      class="mx-auto mt-2 mb-8"
       flat
     >
-        <div class="d-flex flex-row-reverse">
-            <v-btn
-            class="ma-2"
-            outlined
-            color="indigo"
-            to="/CreateInvoice">New Invoice
+        <div class="text-center">
+          <v-btn
+            color="primary"
+            class="mb-10 mt-10"
+            width="300"
+            height="50"
+            @click="$router.push('CreateInvoice')">New Invoice
+          </v-btn>
+       </div>
 
-            </v-btn>
-        </div>
     </v-card>
-  </v-app>
+    </v-card-title>
+</v-app>
 </template>
 
 <script>
@@ -165,7 +170,7 @@ export default {
             value: 'total',
             sortable: true,
         },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: 'See Invoice', value: 'actions', sortable: false },
       ],
       desserts: [],
       editedItem: {
@@ -192,7 +197,7 @@ export default {
                   invoice_number: data.invoice_number,
                   client_name: data.client_name,
                   subtotal: data.subtotal,
-                  discount: data.discount + '%',
+                  discount: data.discount,
                   total: data.total,
                   id: data.id,
                   date: data.date
@@ -207,7 +212,7 @@ export default {
       },
 
       editItem (item) {
-        
+        console.log(item.client_name)
         sessionStorage.setItem('invoice', JSON.stringify(item));
         this.$router.push('CreateFullInvoice')
          

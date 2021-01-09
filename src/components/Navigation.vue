@@ -1,12 +1,22 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link>
-    <!-- <a href="#">Friends</a> -->
-  </nav>
+ <v-toolbar color="indigo" dark fixed app>
+   
+  <v-toolbar-title>Application</v-toolbar-title>
+  <hr/>
+  <hr/>
+  <v-toolbar-title>
+  <v-spacer></v-spacer>
+    <router-link 
+      to="/"
+      class="link"
+    >Home</router-link>
+  </v-toolbar-title>
+  </v-toolbar>
+  
+  
 </template>
 
 <script>
-// import FriendStore from "../stores/FriendStore"
 
 export default {
   name: "Navigation"
@@ -14,24 +24,19 @@ export default {
 </script>
 
 <style scoped>
-nav {
-  background: #dbab0cc7;
-  color: white;
-  margin-bottom: 20px;
-  padding: 20px 10%;
-  width: 100%;
-  text-align: center;
-}
-a {
-  color: #fff;
+.link {
+  color: #FFF;
+   text-decoration: none;
 }
 
-.router-link-exact-active{
-  /* background: yellow; */
-  border-radius: 5px;
-  color: rgb(2, 1, 1);
-  font-variant: italic;
-  text-decoration: none
+.link:hover {
+   color: #00F
+}
+hr {
+  margin-left: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 
 }
+
 </style>
